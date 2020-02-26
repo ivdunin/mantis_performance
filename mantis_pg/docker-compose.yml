@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+    mantisbt:
+        image: xlrl/mantisbt:2.23.0
+        ports:
+            - "80:80"
+        links:
+            - pg
+        volumes:
+            - ./data/config:/var/www/html/config
+            - ./data/custom:/var/www/html/custom
+        networks: 
+            - mantis_network
+        restart: always
+      
+    pg:
+        image: postgres:9.6.17
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=mantisbt
+            - POSTGRES_PASSWORD=mantisbt
+            - POSTGRES_DB=bugtracker
+            - POSTGRES_HOST_AUTH_METHOD=password
+        volumes:
+            - ./data/pgdata:/var/lib/postgresql/data
+        networks: 
+            - mantis_network
+        restart: always
+
+networks:
+    mantis_network:
