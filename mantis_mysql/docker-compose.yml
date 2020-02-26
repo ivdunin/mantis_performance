@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+    mantisbt:
+        image: xlrl/mantisbt:2.23.0
+        ports:
+            - "80:80"
+        links:
+            - mysql
+        volumes:
+            - ./data/config:/var/www/html/config
+            - ./data/custom:/var/www/html/custom
+        networks: 
+            - mantis_network
+        restart: always
+      
+    mysql:
+        image: mariadb:10.4
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=bugtracker
+            - MYSQL_USER=mantisbt
+            - MYSQL_PASSWORD=mantisbt
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+        networks: 
+            - mantis_network
+        restart: always
+
+networks:
+    mantis_network:
